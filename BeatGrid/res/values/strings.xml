@@ -7,11 +7,11 @@
 	<string name="settings_title">BeatGrid settings</string>
 	<string name="settings_shortcut">s</string>
 
-	<string name="width_summary">Adjust grid width (requires restart)</string>
+	<string name="width_summary">Adjust grid width</string>
 	<string name="width_title">Width</string>
 	<string name="width_units"></string>
 
-	<string name="height_summary">Adjust grid height (requires restart)</string>
+	<string name="height_summary">Adjust grid height</string>
 	<string name="height_title">Height</string>
 	<string name="height_units"></string>
 

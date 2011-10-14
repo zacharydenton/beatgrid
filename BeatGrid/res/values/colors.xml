@@ -9,4 +9,7 @@
 	<color name="grid_hint_1">#6400ff80</color>
 	<color name="grid_hint_2">#2000ff80</color>
 	<color name="grid_selected">#64ff8000</color>  
+	
+	    <color name="beat_inactive">#cce6f0ff</color>
+	
 </resources>
