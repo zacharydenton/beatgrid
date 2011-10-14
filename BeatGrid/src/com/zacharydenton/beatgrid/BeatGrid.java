@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,22 +13,28 @@ import android.view.MenuItem;
 public class BeatGrid extends Activity {
 	
 	private GridView gridView;
-	//private ArrayList beats;
+	private ArrayList<Beat> beats;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gridView = new GridView(this);
-        setContentView(gridView);
-        gridView.requestFocus();
+        initializeGrid();
 
     }
 
     @Override
     protected void onResume() {
     	super.onResume();
-        gridView = new GridView(this);
+    	initializeGrid();        
+    }
+    
+    private void initializeGrid() {
+    	beats = new ArrayList<Beat>();
+    	for (int i=0; i < (Prefs.getWidth(this) * Prefs.getHeight(this)); i++) {
+    		beats.add(new Beat(this));
+    	}
+    	gridView = new GridView(this);
         setContentView(gridView);
         gridView.requestFocus();
     }
@@ -49,4 +56,8 @@ public class BeatGrid extends Activity {
     	}
     	return false;
     }
+
+	public ArrayList<Beat> getBeats() {
+		return beats;
+	}
 }

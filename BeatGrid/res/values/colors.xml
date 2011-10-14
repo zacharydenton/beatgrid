@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="grid_background">#ffe6f0ff</color>
+	<color name="grid_background">#ffe6f0ff</color>
 	<color name="grid_hilite">#ffffffff</color>
 	<color name="grid_light">#64c6d4ef</color>
 	<color name="grid_dark">#6456648f</color>
@@ -8,8 +8,10 @@
 	<color name="grid_hint_0">#64ff0000</color>
 	<color name="grid_hint_1">#6400ff80</color>
 	<color name="grid_hint_2">#2000ff80</color>
-	<color name="grid_selected">#64ff8000</color>  
-	
-	    <color name="beat_inactive">#cce6f0ff</color>
-	
+	<color name="grid_selected">#64ff8000</color>
+
+	<color name="beat_inactive">#ffe6f0ff</color>
+	<color name="beat_active">#cce6ffff</color>
+
+
 </resources>
