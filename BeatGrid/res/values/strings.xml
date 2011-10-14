@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, BeatGrid!</string>
-    <string name="app_name">BeatGrid</string>
+	<string name="hello">Hello World, BeatGrid!</string>
+	<string name="app_name">BeatGrid</string>
+	<string name="settings_label">Settings...</string>
+	<string name="settings_title">BeatGrid settings</string>
+	<string name="settings_shortcut">s</string>
+	<string name="music_title">Music</string>
+	<string name="music_summary">Play background music</string>
+	<string name="hints_title">Hints</string>
+	<string name="hints_summary">Show hints during play</string>
 </resources>

@@ -5,20 +5,27 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class GridView extends View {
 	
-	private int maxX = 4;
-	private int maxY = 4;
+	private int maxX;
+	private int maxY;
 	private float width;
 	private float height;
 	private int selX;
 	private int selY;
 	private final Rect selRect = new Rect();
+	private final BeatGrid beatGrid;
 
 	public GridView(Context context) {
 		super(context);
+		
+		beatGrid = (BeatGrid) context;
+		maxX = beatGrid.getWidth();
+		maxY = beatGrid.getHeight();
+		
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		
@@ -73,6 +80,17 @@ public class GridView extends View {
 			return super.onKeyDown(keyCode, event);
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			select((int) (event.getX() / width), (int) (event.getY() / height));
+			return true;
+		default:
+			return super.onTouchEvent(event);
+		}
 	}
 	
 	@Override
