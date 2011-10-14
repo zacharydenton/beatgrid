@@ -1,15 +1,15 @@
 package com.zacharydenton.beatgrid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class BeatGrid extends Activity {
 	
 	private GridView gridView;
-	private int width = 4;
-	private int height = 4;
 	
     /** Called when the activity is first created. */
     @Override
@@ -29,20 +29,14 @@ public class BeatGrid extends Activity {
     	inflater.inflate(R.menu.menu, menu);
     	return true;
     }
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    	case R.id.settings:
+    		startActivity(new Intent(this, Prefs.class));
+    		return true;
+    	}
+    	return false;
+    }
 }

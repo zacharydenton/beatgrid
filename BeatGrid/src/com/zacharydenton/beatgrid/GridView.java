@@ -23,8 +23,8 @@ public class GridView extends View {
 		super(context);
 		
 		beatGrid = (BeatGrid) context;
-		maxX = beatGrid.getWidth();
-		maxY = beatGrid.getHeight();
+		maxX = Prefs.getWidth(getContext());
+		maxY = Prefs.getHeight(getContext());
 		
 		setFocusable(true);
 		setFocusableInTouchMode(true);

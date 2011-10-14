@@ -2,11 +2,17 @@
 <resources>
 	<string name="hello">Hello World, BeatGrid!</string>
 	<string name="app_name">BeatGrid</string>
+
 	<string name="settings_label">Settings...</string>
 	<string name="settings_title">BeatGrid settings</string>
 	<string name="settings_shortcut">s</string>
-	<string name="music_title">Music</string>
-	<string name="music_summary">Play background music</string>
-	<string name="hints_title">Hints</string>
-	<string name="hints_summary">Show hints during play</string>
+
+	<string name="width_summary">Adjust grid width (requires restart)</string>
+	<string name="width_title">Width</string>
+	<string name="width_units"></string>
+
+	<string name="height_summary">Adjust grid height (requires restart)</string>
+	<string name="height_title">Height</string>
+	<string name="height_units"></string>
+
 </resources>
