@@ -11,7 +11,9 @@
 	<color name="grid_selected">#64ff8000</color>
 
 	<color name="beat_inactive">#ffe6f0ff</color>
-	<color name="beat_active">#cce6ffff</color>
+	<color name="beat_active">#ffC7FFC2</color>
+	<color name="beat_recording">#ffFFC2CF</color>
+	<color name="beat_initialized">#FFC2E6FF</color>
 
 
 </resources>

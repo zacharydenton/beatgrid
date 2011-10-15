@@ -63,31 +63,10 @@ public class GridView extends View {
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_DPAD_UP:
-			select(selX, selY - 1);
-			break;
-		case KeyEvent.KEYCODE_DPAD_DOWN:
-			select(selX, selY + 1);
-			break;
-		case KeyEvent.KEYCODE_DPAD_LEFT:
-			select(selX - 1, selY);
-			break;
-		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			select(selX + 1, selY);
-			break;
-		default:
-			return super.onKeyDown(keyCode, event);
-		}
-		return true;
-	}
-
-	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			select((int) (event.getX() / width), (int) (event.getY() / height));
+			toggle((int) (event.getX() / width), (int) (event.getY() / height));
 			return true;
 		default:
 			return super.onTouchEvent(event);
@@ -111,21 +90,16 @@ public class GridView extends View {
 		}
 	}
 
-	private void selectBeat(int x, int y) {
-		for (Beat beat : beatGrid.getBeats()) {
-			if (beat.deselect()) {
-				invalidate(beat.getRect());
-			}
-		}
+	private void toggleBeat(int x, int y) {
 		Beat beat = beatGrid.getBeats().get(selY * maxX + selX);
 		invalidate(beat.getRect());
-		beat.select();
+		beat.toggle();
 		invalidate(beat.getRect());
 	}
 
-	private void select(int x, int y) {
+	private void toggle(int x, int y) {
 		selX = Math.min(Math.max(x, 0), maxX - 1);
 		selY = Math.min(Math.max(y, 0), maxY - 1);
-		selectBeat(selX, selY);
+		toggleBeat(selX, selY);
 	}
 }
