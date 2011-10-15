@@ -6,7 +6,7 @@ import java.io.IOException;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.MediaPlayer;
+import android.media.AudioManager;
 import android.util.Log;
 import android.view.View;
 
@@ -16,10 +16,11 @@ public class Beat extends View {
 	private final Paint color = new Paint();
 	private final BeatGrid beatGrid;
 	private final AudioRecorder recorder;
-	private final MediaPlayer player = new MediaPlayer();
 	private String path;
 	private boolean active;
 	private boolean recording;
+	private int soundID;
+	private int streamID;
 
 	public Beat(Context context) {
 		super(context);
@@ -75,12 +76,12 @@ public class Beat extends View {
 
 	private void play() {
 		try {
-			player.prepare();
-			player.start();
+			AudioManager mgr = (AudioManager)beatGrid.getSystemService(Context.AUDIO_SERVICE);
+	        float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+	        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+	        float volume = streamVolumeCurrent / streamVolumeMax;  
+			streamID = beatGrid.getSoundPool().play(soundID, volume, volume, 1, -1, 1.0f);
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -90,7 +91,10 @@ public class Beat extends View {
 		if (!active) {
 			active = true;
 			if ((path == null) && (!recording)) {
-				startRecording();
+				if (!beatGrid.isRecording())
+					startRecording();
+				else
+					return false;
 			} else {
 				play();
 				setColor(getResources().getColor(R.color.beat_active));
@@ -114,6 +118,7 @@ public class Beat extends View {
 	private void startRecording() {
 		try {
 			recording = true;
+			beatGrid.setRecording(true);
 			recorder.start();
 			setColor(getResources().getColor(R.color.beat_recording));
 		} catch (IOException e) {
@@ -123,7 +128,7 @@ public class Beat extends View {
 	}
 
 	private void stop() {
-		player.stop();
+		beatGrid.getSoundPool().stop(streamID);
 	}
 	
 	private void stopRecording() {
@@ -131,8 +136,9 @@ public class Beat extends View {
 			Log.d("beatgrid", "here");
 			recorder.stop();
 			path = recorder.path;
-			player.setDataSource(path);
+			soundID = beatGrid.getSoundPool().load(path, 1);
 			recording = false;
+			beatGrid.setRecording(false);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

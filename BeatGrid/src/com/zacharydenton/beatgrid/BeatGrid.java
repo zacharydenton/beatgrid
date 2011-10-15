@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,13 +15,16 @@ public class BeatGrid extends Activity {
 	
 	private GridView gridView;
 	private ArrayList<Beat> beats;
+	private SoundPool soundPool;
+	private boolean recording = false;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeGrid();
-
+        soundPool = new SoundPool(Prefs.getWidth(this) * Prefs.getHeight(this),
+        		AudioManager.STREAM_MUSIC, 0);
     }
 
     @Override
@@ -59,5 +63,17 @@ public class BeatGrid extends Activity {
 
 	public ArrayList<Beat> getBeats() {
 		return beats;
+	}
+
+	public SoundPool getSoundPool() {
+		return soundPool;
+	}
+
+	public boolean isRecording() {
+		return recording;
+	}
+
+	public void setRecording(boolean recording) {
+		this.recording = recording;
 	}
 }
