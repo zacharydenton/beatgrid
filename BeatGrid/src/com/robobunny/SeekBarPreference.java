@@ -171,7 +171,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
 		// change accepted, store it
 		mCurrentValue = newValue;
-		mStatusText.setText(String.valueOf(newValue));
+		if (mStatusText != null)
+			mStatusText.setText(String.valueOf(newValue));
 		persistInt(newValue);
 
 	}

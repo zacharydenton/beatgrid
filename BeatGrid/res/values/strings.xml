@@ -14,5 +14,8 @@
 	<string name="height_summary">Adjust grid height</string>
 	<string name="height_title">Height</string>
 	<string name="height_units"></string>
+	
+	<string name="haptic_summary">Vibrate on touch</string>
+	<string name="haptic_title">Haptic feedback</string>
 
 </resources>

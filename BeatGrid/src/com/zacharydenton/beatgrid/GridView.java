@@ -74,7 +74,8 @@ public class GridView extends View implements OnGestureListener {
 	}
 	
 	public boolean onDown(MotionEvent event) {
-		vibrator.vibrate(50);
+		if (Prefs.getHaptic(beatGrid))
+			vibrator.vibrate(50);
 		toggle((int) (event.getX() / cellWidth), (int) (event.getY() / cellHeight));
 		return true;
 	}
@@ -84,7 +85,8 @@ public class GridView extends View implements OnGestureListener {
 	}
 	
     public void onLongPress(MotionEvent event) {
-    	vibrator.vibrate(50);
+		if (Prefs.getHaptic(beatGrid))
+			vibrator.vibrate(50);
     	clear((int) (event.getX() / cellWidth), (int) (event.getY() / cellHeight));
     }
     
