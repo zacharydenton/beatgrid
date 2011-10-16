@@ -1,5 +1,6 @@
 package com.zacharydenton.beatgrid;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +24,8 @@ public class BeatGrid extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeGrid();
+        initializeGrid(savedInstanceState);
+    	
         soundPool = new SoundPool(Prefs.getWidth(this) * Prefs.getHeight(this),
         		AudioManager.STREAM_MUSIC, 0);
     }
@@ -30,13 +33,29 @@ public class BeatGrid extends Activity {
     @Override
     protected void onResume() {
     	super.onResume();
-    	initializeGrid();        
+    	if (beats.size() != Prefs.getWidth(this) * Prefs.getHeight(this))
+    		initializeGrid(null);    
     }
     
-    private void initializeGrid() {
-    	beats = new ArrayList<Beat>();
-    	for (int i=0; i < (Prefs.getWidth(this) * Prefs.getHeight(this)); i++) {
-    		beats.add(new Beat(this));
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	soundPool.autoPause();
+    }
+    
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        return beats;
+    }
+
+    private void initializeGrid(Bundle savedInstanceState) {
+    	if (savedInstanceState != null) {
+        	beats = (ArrayList<Beat>) getLastNonConfigurationInstance();
+    	} else {
+	    	beats = new ArrayList<Beat>();
+	    	for (int i=0; i < (Prefs.getWidth(this) * Prefs.getHeight(this)); i++) {
+	    		beats.add(new Beat(this));
+	    	}
     	}
     	gridView = new GridView(this);
         setContentView(gridView);

@@ -2,6 +2,7 @@ package com.zacharydenton.beatgrid;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import android.content.Context;
 import android.graphics.Paint;
