@@ -1,6 +1,5 @@
 package com.zacharydenton.beatgrid;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,7 +46,8 @@ public class BeatGrid extends Activity {
         return beats;
     }
 
-    private void initializeGrid(Bundle savedInstanceState) {
+    @SuppressWarnings("unchecked")
+	private void initializeGrid(Bundle savedInstanceState) {
     	if (savedInstanceState != null) {
         	beats = (ArrayList<Beat>) getLastNonConfigurationInstance();
     	} else {

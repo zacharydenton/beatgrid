@@ -2,7 +2,6 @@ package com.zacharydenton.beatgrid;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -16,7 +15,7 @@ public class Beat extends View {
 	private final Rect rect = new Rect();
 	private final Paint color = new Paint();
 	private final BeatGrid beatGrid;
-	private final AudioRecorder recorder;
+	private AudioRecorder recorder;
 	private String path;
 	private boolean active;
 	private boolean recording;
@@ -26,12 +25,9 @@ public class Beat extends View {
 	public Beat(Context context) {
 		super(context);
 		
-		beatGrid = (BeatGrid) context;		
-		active = false;
-		setColor(getResources().getColor(R.color.beat_inactive));
-		
-		recorder = new AudioRecorder(generatePath());
-		recording = false;
+		beatGrid = (BeatGrid) context;	
+		clear();
+
 		
 	}
 	
@@ -134,7 +130,6 @@ public class Beat extends View {
 	
 	private void stopRecording() {
 		try {
-			Log.d("beatgrid", "here");
 			recorder.stop();
 			path = recorder.path;
 			soundID = beatGrid.getSoundPool().load(path, 1);
@@ -150,6 +145,14 @@ public class Beat extends View {
 			deselect();
 		else
 			select();
+	}
+	
+	public void clear() {
+		active = false;
+		setColor(getResources().getColor(R.color.beat_inactive));
+		
+		recorder = new AudioRecorder(generatePath());
+		recording = false;
 	}
 
 }

@@ -3,13 +3,13 @@ package com.zacharydenton.beatgrid;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class GridView extends View {
+public class GridView extends View implements OnGestureListener {
 
 	private int width;
 	private int height;
@@ -17,6 +17,7 @@ public class GridView extends View {
 	private float cellHeight;
 	private int selX;
 	private int selY;
+	private GestureDetector gestureDetector;
 	private final BeatGrid beatGrid;
 
 	public GridView(Context context) {
@@ -25,6 +26,8 @@ public class GridView extends View {
 		beatGrid = (BeatGrid) context;
 		width = Prefs.getWidth(getContext());
 		height = Prefs.getHeight(getContext());
+		
+		gestureDetector = new GestureDetector(this);
 
 		setFocusable(true);
 		setFocusableInTouchMode(true);
@@ -62,17 +65,34 @@ public class GridView extends View {
 		}
 	}
 
-	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			toggle((int) (event.getX() / cellWidth), (int) (event.getY() / cellHeight));
-			return true;
-		default:
-			return super.onTouchEvent(event);
-		}
+		return gestureDetector.onTouchEvent(event);
 	}
+	
+	public boolean onDown(MotionEvent event) {
+		toggle((int) (event.getX() / cellWidth), (int) (event.getY() / cellHeight));
+		return true;
+	}
+	
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+		return true;
+	}
+	
+    public void onLongPress(MotionEvent event) {
+    	clear((int) (event.getX() / cellWidth), (int) (event.getY() / cellHeight));
+    }
+    
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+    	return true;
+    }
+    
+    public void onShowPress(MotionEvent event) {
+    }
 
+    public boolean onSingleTapUp(MotionEvent event) {
+    	return true;
+    }
+    
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		cellWidth = w / (float) width;
@@ -96,10 +116,25 @@ public class GridView extends View {
 		beat.toggle();
 		invalidate(beat.getRect());
 	}
+	
+	private void clearBeat(int x, int y) {
+		Beat beat = beatGrid.getBeats().get(y * width + x);
+		invalidate(beat.getRect());
+		beat.clear();
+		invalidate(beat.getRect());
+	}
 
 	private void toggle(int x, int y) {
+		Log.d("beatgrid", "toggling: " + x + " " + y);
 		selX = Math.min(Math.max(x, 0), width - 1);
 		selY = Math.min(Math.max(y, 0), height - 1);
 		toggleBeat(selX, selY);
+	}
+	
+	private void clear(int x, int y) {
+		Log.d("beatgrid", "clearing: " + x + " " + y);
+		selX = Math.min(Math.max(x, 0), width - 1);
+		selY = Math.min(Math.max(y, 0), height - 1);
+		clearBeat(selX, selY);
 	}
 }
