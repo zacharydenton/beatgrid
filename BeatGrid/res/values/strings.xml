@@ -14,8 +14,12 @@
 	<string name="height_summary">Adjust grid height</string>
 	<string name="height_title">Height</string>
 	<string name="height_units"></string>
-	
+
 	<string name="haptic_summary">Vibrate on touch</string>
 	<string name="haptic_title">Haptic feedback</string>
+
+	<string name="loop_title">Looping</string>
+	<string name="loop_summary">Loop playback of sounds</string>
+
 
 </resources>

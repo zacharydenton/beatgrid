@@ -16,7 +16,6 @@ public class BeatGrid extends Activity {
 	
 	private GridView gridView;
 	private ArrayList<Beat> beats;
-	private SoundPool soundPool;
 	private boolean recording = false;
 	
     /** Called when the activity is first created. */
@@ -24,9 +23,6 @@ public class BeatGrid extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeGrid(savedInstanceState);
-    	
-        soundPool = new SoundPool(Prefs.getWidth(this) * Prefs.getHeight(this),
-        		AudioManager.STREAM_MUSIC, 0);
     }
 
     @Override
@@ -39,7 +35,9 @@ public class BeatGrid extends Activity {
     @Override
     protected void onPause() {
     	super.onPause();
-    	soundPool.autoPause();
+    	for (Beat beat : beats) {
+    		beat.deselect();
+    	}
     }
     
     @Override
@@ -82,10 +80,6 @@ public class BeatGrid extends Activity {
 
 	public ArrayList<Beat> getBeats() {
 		return beats;
-	}
-
-	public SoundPool getSoundPool() {
-		return soundPool;
 	}
 
 	public boolean isRecording() {

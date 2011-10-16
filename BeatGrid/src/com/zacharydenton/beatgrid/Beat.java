@@ -7,6 +7,8 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
 import android.view.View;
 
@@ -16,21 +18,22 @@ public class Beat extends View {
 	private final Paint color = new Paint();
 	private final BeatGrid beatGrid;
 	private AudioRecorder recorder;
+	private final MediaPlayer player = new MediaPlayer();
 	private String path;
 	private boolean active;
 	private boolean recording;
-	private int soundID;
-	private int streamID;
 
 	public Beat(Context context) {
 		super(context);
-		
-		beatGrid = (BeatGrid) context;	
-		clear();		
+
+		beatGrid = (BeatGrid) context;
+		clear();
 	}
-	
+
 	public boolean deselect() {
 		if (active) {
+			invalidate(getRect());
+
 			active = false;
 			if (recording) {
 				stopRecording();
@@ -42,6 +45,8 @@ public class Beat extends View {
 			} else {
 				setColor(getResources().getColor(R.color.beat_inactive));
 			}
+			invalidate(getRect());
+
 			return true;
 		} else {
 			return false;
@@ -60,22 +65,38 @@ public class Beat extends View {
 			return "";
 		}
 	}
-	
+
 	public Paint getColor() {
 		return color;
 	}
-		
+
 	public Rect getRect() {
 		return rect;
 	}
 
 	private void play() {
 		try {
-			AudioManager mgr = (AudioManager)beatGrid.getSystemService(Context.AUDIO_SERVICE);
-	        float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-	        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-	        float volume = streamVolumeCurrent / streamVolumeMax;  
-			streamID = beatGrid.getSoundPool().play(soundID, volume, volume, 1, -1, 1.0f);
+			if (!player.isPlaying()) {
+				AudioManager mgr = (AudioManager) beatGrid
+						.getSystemService(Context.AUDIO_SERVICE);
+				float streamVolumeCurrent = mgr
+						.getStreamVolume(AudioManager.STREAM_MUSIC);
+				float streamVolumeMax = mgr
+						.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+				float volume = streamVolumeCurrent / streamVolumeMax;
+				player.setVolume(volume, volume);
+				if (Prefs.getLooping(beatGrid)) {
+					player.setLooping(true);
+				} else {
+					player.setLooping(false);
+					player.setOnCompletionListener(new OnCompletionListener() {
+						public void onCompletion(MediaPlayer player) {
+							Beat.this.deselect();
+						}
+					});
+				}
+				player.start();
+			}
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,9 +119,9 @@ public class Beat extends View {
 		} else {
 			return false;
 		}
-		
+
 	}
-	
+
 	public void setColor(int c) {
 		color.setColor(c);
 	}
@@ -109,7 +130,7 @@ public class Beat extends View {
 		rect.set((int) (x * width), (int) (y * height),
 				(int) (x * width + width), (int) (y * height + height));
 	}
-	
+
 	private void startRecording() {
 		try {
 			recording = true;
@@ -122,15 +143,28 @@ public class Beat extends View {
 		}
 	}
 
-	private void stop() {
-		beatGrid.getSoundPool().stop(streamID);
+	public void stop() {
+		if (player.isPlaying()) {
+			player.stop();
+			try {
+				player.prepare();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
-	
+
 	private void stopRecording() {
 		try {
 			recorder.stop();
 			path = recorder.path;
-			soundID = beatGrid.getSoundPool().load(path, 1);
+			player.setDataSource(path);
+			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			player.prepare();
 			recording = false;
 			beatGrid.setRecording(false);
 		} catch (IOException e) {
@@ -138,20 +172,22 @@ public class Beat extends View {
 			e.printStackTrace();
 		}
 	}
+
 	public void toggle() {
 		if (active)
 			deselect();
 		else
 			select();
 	}
-	
+
 	public void clear() {
 		if (recording)
 			stopRecording();
 		if (active)
 			stop();
 		setColor(getResources().getColor(R.color.beat_inactive));
-		
+
+		player.reset();
 		recorder = new AudioRecorder(generatePath());
 		recording = false;
 		active = false;

@@ -40,6 +40,7 @@ public class GridView extends View implements OnGestureListener {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		invalidate();
 		// Paint background = new Paint();
 		// background.setColor(getResources().getColor(R.color.grid_background));
 		// canvas.drawRect(0, 0, getWidth(), getHeight(), background);

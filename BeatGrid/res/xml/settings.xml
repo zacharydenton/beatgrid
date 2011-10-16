@@ -6,6 +6,10 @@
 		android:title="@string/haptic_title" android:summary="@string/haptic_summary"
 		android:defaultValue="true" />
 
+	<CheckBoxPreference android:key="loop"
+		android:title="@string/loop_title" android:summary="@string/loop_summary"
+		android:defaultValue="true" />
+
 	<com.robobunny.SeekBarPreference
 		android:key="width" android:title="@string/width_title"
 		android:summary="@string/width_summary" android:defaultValue="4"
