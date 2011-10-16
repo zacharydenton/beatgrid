@@ -3,6 +3,7 @@ package com.zacharydenton.beatgrid;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -19,6 +20,7 @@ public class GridView extends View implements OnGestureListener {
 	private int selY;
 	private GestureDetector gestureDetector;
 	private final BeatGrid beatGrid;
+	private Vibrator vibrator;
 
 	public GridView(Context context) {
 		super(context);
@@ -28,6 +30,8 @@ public class GridView extends View implements OnGestureListener {
 		height = Prefs.getHeight(getContext());
 		
 		gestureDetector = new GestureDetector(this);
+        vibrator = (Vibrator) beatGrid.getSystemService(beatGrid.VIBRATOR_SERVICE);
+
 
 		setFocusable(true);
 		setFocusableInTouchMode(true);
@@ -70,6 +74,7 @@ public class GridView extends View implements OnGestureListener {
 	}
 	
 	public boolean onDown(MotionEvent event) {
+		vibrator.vibrate(50);
 		toggle((int) (event.getX() / cellWidth), (int) (event.getY() / cellHeight));
 		return true;
 	}
@@ -79,6 +84,7 @@ public class GridView extends View implements OnGestureListener {
 	}
 	
     public void onLongPress(MotionEvent event) {
+    	vibrator.vibrate(50);
     	clear((int) (event.getX() / cellWidth), (int) (event.getY() / cellHeight));
     }
     

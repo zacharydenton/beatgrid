@@ -26,9 +26,7 @@ public class Beat extends View {
 		super(context);
 		
 		beatGrid = (BeatGrid) context;	
-		clear();
-
-		
+		clear();		
 	}
 	
 	public boolean deselect() {
@@ -148,11 +146,16 @@ public class Beat extends View {
 	}
 	
 	public void clear() {
-		active = false;
+		if (recording)
+			stopRecording();
+		if (active)
+			stop();
 		setColor(getResources().getColor(R.color.beat_inactive));
 		
 		recorder = new AudioRecorder(generatePath());
 		recording = false;
+		active = false;
+		path = null;
 	}
 
 }
