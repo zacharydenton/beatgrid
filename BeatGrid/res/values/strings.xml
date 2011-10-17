@@ -3,9 +3,17 @@
 	<string name="hello">Hello World, BeatGrid!</string>
 	<string name="app_name">BeatGrid</string>
 
-	<string name="settings_label">Settings...</string>
+	<string name="savegrid_label">Save grid</string>
+	<string name="savegrid_title">Save grid</string>
+	<string name="savegrid_shortcut">s</string>
+
+	<string name="loadgrid_label">Load grid</string>
+	<string name="loadgrid_title">Load grid</string>
+	<string name="loadgrid_shortcut">l</string>
+
+	<string name="settings_label">Settings</string>
 	<string name="settings_title">BeatGrid settings</string>
-	<string name="settings_shortcut">s</string>
+	<string name="settings_shortcut">p</string>
 
 	<string name="width_summary">Adjust grid width</string>
 	<string name="width_title">Width</string>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -20,6 +19,7 @@ public class GridView extends View implements OnGestureListener {
 	private int selY;
 	private GestureDetector gestureDetector;
 	private final BeatGrid beatGrid;
+	private Grid grid;
 	private Vibrator vibrator;
 
 	public GridView(Context context) {
@@ -28,9 +28,11 @@ public class GridView extends View implements OnGestureListener {
 		beatGrid = (BeatGrid) context;
 		width = Prefs.getWidth(getContext());
 		height = Prefs.getHeight(getContext());
+		setGrid(beatGrid.getGrid());
+
 		
 		gestureDetector = new GestureDetector(this);
-        vibrator = (Vibrator) beatGrid.getSystemService(beatGrid.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) beatGrid.getSystemService(Context.VIBRATOR_SERVICE);
 
 
 		setFocusable(true);
@@ -45,7 +47,7 @@ public class GridView extends View implements OnGestureListener {
 		// background.setColor(getResources().getColor(R.color.grid_background));
 		// canvas.drawRect(0, 0, getWidth(), getHeight(), background);
 
-		for (Beat beat : beatGrid.getBeats()) {
+		for (Beat beat : getGrid().getBeats()) {
 			canvas.drawRect(beat.getRect(), beat.getColor());
 		}
 
@@ -106,44 +108,45 @@ public class GridView extends View implements OnGestureListener {
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		cellWidth = w / (float) width;
 		cellHeight = h / (float) height;
-		updateBeats(width, height, cellWidth, cellHeight);
+		getGrid().resize(width, height, cellWidth, cellHeight);
 		super.onSizeChanged(w, h, oldw, oldh);
 
 	}
 
-	private void updateBeats(int width, int height, float cellWidth, float cellHeight) {
-		int i = 0;
-		for (Beat beat : beatGrid.getBeats()) {
-			beat.setRect(i % width, i / width, cellWidth, cellHeight);
-			i++;
-		}
-	}
-
 	private void toggleBeat(int x, int y) {
-		Beat beat = beatGrid.getBeats().get(y * width + x);
+		Beat beat = getGrid().get(x, y);
 		invalidate(beat.getRect());
 		beat.toggle();
 		invalidate(beat.getRect());
 	}
 	
 	private void clearBeat(int x, int y) {
-		Beat beat = beatGrid.getBeats().get(y * width + x);
+		Beat beat = getGrid().get(x, y);
 		invalidate(beat.getRect());
 		beat.clear();
 		invalidate(beat.getRect());
 	}
 
 	private void toggle(int x, int y) {
-		Log.d("beatgrid", "toggling: " + x + " " + y);
 		selX = Math.min(Math.max(x, 0), width - 1);
 		selY = Math.min(Math.max(y, 0), height - 1);
 		toggleBeat(selX, selY);
 	}
 	
 	private void clear(int x, int y) {
-		Log.d("beatgrid", "clearing: " + x + " " + y);
 		selX = Math.min(Math.max(x, 0), width - 1);
 		selY = Math.min(Math.max(y, 0), height - 1);
 		clearBeat(selX, selY);
+	}
+
+	public Grid getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Grid grid) {
+		invalidate();
+		this.grid = grid;
+		getGrid().resize(width, height, cellWidth, cellHeight);
+		invalidate();
 	}
 }

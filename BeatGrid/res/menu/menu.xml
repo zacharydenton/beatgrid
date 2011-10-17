@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/savegrid" android:title="@string/savegrid_label"
+		android:alphabeticShortcut="@string/savegrid_shortcut" />
+		<item android:id="@+id/loadgrid" android:title="@string/loadgrid_label"
+		android:alphabeticShortcut="@string/loadgrid_shortcut" />
 	<item android:id="@+id/settings" android:title="@string/settings_label"
 		android:alphabeticShortcut="@string/settings_shortcut" />
 </menu>

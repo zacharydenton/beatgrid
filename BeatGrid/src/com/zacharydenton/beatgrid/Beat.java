@@ -2,6 +2,7 @@ package com.zacharydenton.beatgrid;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -9,16 +10,20 @@ import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.util.Log;
+import android.os.Environment;
 import android.view.View;
 
-public class Beat extends View {
+public class Beat extends View implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4477957099798092027L;
 	private final Rect rect = new Rect();
 	private final Paint color = new Paint();
 	private final BeatGrid beatGrid;
 	private AudioRecorder recorder;
-	private final MediaPlayer player = new MediaPlayer();
+	private MediaPlayer player;
 	private String path;
 	private boolean active;
 	private boolean recording;
@@ -26,6 +31,7 @@ public class Beat extends View {
 	public Beat(Context context) {
 		super(context);
 
+		player = new MediaPlayer();
 		beatGrid = (BeatGrid) context;
 		clear();
 	}
@@ -54,7 +60,8 @@ public class Beat extends View {
 	}
 
 	private String generatePath() {
-		File soundDir = new File("/sdcard/BeatGrid/beats");
+		File soundDir = new File(Environment.getExternalStorageDirectory().getPath()
+				+ "/BeatGrid/beats");
 		soundDir.mkdirs();
 		File soundFile;
 		try {
@@ -74,7 +81,7 @@ public class Beat extends View {
 		return rect;
 	}
 
-	private void play() {
+	private void play() throws IOException {
 		try {
 			if (!player.isPlaying()) {
 				AudioManager mgr = (AudioManager) beatGrid
@@ -112,7 +119,13 @@ public class Beat extends View {
 				else
 					return false;
 			} else {
-				play();
+				try {
+					play();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					deselect();
+					e.printStackTrace();
+				}
 				setColor(getResources().getColor(R.color.beat_active));
 			}
 			return true;
@@ -158,13 +171,22 @@ public class Beat extends View {
 		}
 	}
 
-	private void stopRecording() {
-		try {
-			recorder.stop();
-			path = recorder.path;
+	public void loadSound(String filename) throws IllegalArgumentException,
+			IllegalStateException, IOException {
+		if (filename != null) {
+			path = filename;
 			player.setDataSource(path);
 			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			player.prepare();
+			active = false;
+			setColor(getResources().getColor(R.color.beat_initialized));
+		}
+	}
+
+	private void stopRecording() {
+		try {
+			recorder.stop();
+			loadSound(recorder.path);
 			recording = false;
 			beatGrid.setRecording(false);
 		} catch (IOException e) {
@@ -192,6 +214,10 @@ public class Beat extends View {
 		recording = false;
 		active = false;
 		path = null;
+	}
+
+	public String getPath() {
+		return path;
 	}
 
 }
